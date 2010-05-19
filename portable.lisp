@@ -1,5 +1,11 @@
 (in-package :swap-bytes)
 
+(declaim (inline swap-bytes-16))
+(defun swap-bytes-16 (integer)
+  (declare (type (unsigned-byte 16) integer)
+           (optimize (speed 3) (safety 0) (debug 0)))
+  (logior (ash (logand #x00FF integer)  8)
+          (ash (logand #xFF00 integer) -8)))
 
 #-(and sbcl (or x86 x86-64))
 (declaim (inline swap-bytes-32))
