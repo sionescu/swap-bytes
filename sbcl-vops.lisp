@@ -1,5 +1,23 @@
 (in-package :swap-bytes)
 
+#+(or x86 x86-64)
+(define-vop (%16bit-swap-bytes)
+  (:policy :fast-safe)
+  (:translate %swap-bytes-16)
+  (:note "inline 16-bit swap bytes")
+  (:args (integer :scs (sb-vm::unsigned-reg) :target eax))
+  (:arg-types sb-vm::unsigned-num)
+  (:temporary (:sc sb-vm::unsigned-reg
+                   :offset sb-vm::eax-offset :target res
+                   :from (:argument 0) :to (:result 0))
+              eax)
+  (:results (res :scs (sb-vm::unsigned-reg)))
+  (:result-types sb-vm::unsigned-num)
+  (:generator 2
+              (move eax integer)
+              (inst xchg sb-vm::al-tn sb-vm::ah-tn)
+              (move res eax)))
+
 #+x86
 (define-vop (%32bit-swap-bytes)
   (:policy :fast-safe)
@@ -17,7 +35,7 @@
 (define-vop (%32bit-swap-bytes)
   (:policy :fast-safe)
   (:translate %swap-bytes-32)
-  (:note "inline 64-bit swap bytes")
+  (:note "inline 32-bit swap bytes")
   (:args (integer :scs (sb-vm::unsigned-reg) :target res))
   (:arg-types sb-vm::unsigned-num)
   (:results (res :scs (sb-vm::unsigned-reg)))

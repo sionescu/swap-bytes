@@ -1,5 +1,11 @@
 (setf *print-array* nil)
 
+(declaim (inline swap-bytes-16-portable))
+(defun swap-bytes-16-portable (integer)
+  (declare (type (unsigned-byte 16) integer))
+  (logior (ash (logand #xFF integer) 8)
+          (ash integer -8)))
+
 (declaim (inline swap-bytes-32-portable))
 (defun swap-bytes-32-portable (integer)
   (declare (type (unsigned-byte 32) integer))
@@ -23,6 +29,30 @@
      (shift #xFF000000000000 -40)
      (ash integer -56))))
 
+(defparameter *v-16*
+  (let ((i 0))
+    (map-into (make-array 100000000 :element-type '(unsigned-byte 16))
+              (lambda () (mod (incf i) 65536)))))
+
+
+(defun test-16 (vector)
+  (declare (type (simple-array (unsigned-byte 16) (*))
+                 vector))
+  (loop for i below (length vector)
+        do (setf (aref vector i)
+                 (swap-bytes:swap-bytes-16
+                  (aref vector i)))))
+
+(defun test-16-p (vector)
+  (declare (type (simple-array (unsigned-byte 16) (*))
+                 vector))
+  (loop for i below (length vector)
+        do (setf (aref vector i)
+                 (swap-bytes-16-portable
+                  (aref vector i)))))
+
+;;;
+
 (defparameter *v-32*
   (let ((i 0))
     (map-into (make-array 10000000 :element-type '(unsigned-byte 32))
@@ -33,7 +63,7 @@
                  vector))
   (loop for i below (length vector)
         do (setf (aref vector i)
-                 (sb-swap-bytes:swap-bytes-32
+                 (swap-bytes:swap-bytes-32
                   (aref vector i)))))
 
 (defun test-32-p (vector)
@@ -55,7 +85,7 @@
                   vector))
    (loop for i below (length vector)
          do (setf (aref vector i)
-                  (sb-swap-bytes:swap-bytes-64
+                  (swap-bytes:swap-bytes-64
                    (aref vector i)))))
 
  (defun test-64-p (vector)
