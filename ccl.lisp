@@ -1,4 +1,6 @@
 
+(in-package :swap-bytes)
+
 #+(or x86 x86_64)
 (ccl::defx8632lapfunction %swap-bytes-16 ((unsigned-byte arg_z))
   (xchg  (% arg_z.bh)
