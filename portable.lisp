@@ -102,7 +102,7 @@ host order(little- or big-endian)."
 
 (defun find-swap-byte-function (byte-size)
   (ecase byte-size
-    (1 #'identity)
-    (2 #'swap-bytes-16)
-    (4 #'swap-bytes-32)
-    (8 #'swap-bytes-64)))
+    (1 'identity)
+    (2 'swap-bytes-16)
+    (4 'swap-bytes-32)
+    (8 'swap-bytes-64)))
