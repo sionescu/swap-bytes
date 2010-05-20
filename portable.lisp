@@ -98,3 +98,11 @@ host order(little- or big-endian)."
            (optimize (speed 3) (safety 0) (debug 0)))
   #+little-endian (swap-bytes-64 integer)
   #+big-endian    integer)
+
+
+(defun find-swap-byte-function (byte-size)
+  (ecase size
+    (1 #'identity)
+    (2 #'swap-bytes-16)
+    (4 #'swap-bytes-32)
+    (8 #'swap-bytes-64)))
