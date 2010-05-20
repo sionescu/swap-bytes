@@ -1,3 +1,5 @@
+;;; -*- Mode: Lisp -*-
+
 (defsystem :swap-bytes
   :depends-on (:trivial-features)
   :serial t

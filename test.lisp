@@ -1,3 +1,8 @@
+;;; -*- Mode: Lisp -*-
+
+;;; This software is in the public domain and is
+;;; provided with absolutely no warranty.
+
 (setf *print-array* nil)
 
 (declaim (inline swap-bytes-16-portable))

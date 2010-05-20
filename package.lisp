@@ -1,3 +1,5 @@
+;;; -*- Mode: Lisp -*-
+
 (defpackage :swap-bytes
   (:use #:cl
         #+(and sbcl (or x86 x86-64))
