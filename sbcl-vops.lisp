@@ -5,7 +5,7 @@
 
 (in-package :swap-bytes)
 
-#+(or x86 x86-64)
+#+x86
 (define-vop (16bit-swap-bytes)
   (:policy :fast-safe)
   (:translate swap-bytes-16)

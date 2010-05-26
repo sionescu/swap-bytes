@@ -5,9 +5,9 @@
 
 (in-package :swap-bytes)
 
-#-(and sbcl (or x86 x86-64))
+#-(and sbcl x86)
 (declaim (inline swap-bytes-16))
-#-(and sbcl (or x86 x86-64))
+#-(and sbcl x86)
 (defun swap-bytes-16 (integer)
   (declare (type (unsigned-byte 16) integer)
            (optimize (speed 3) (safety 0) (debug 0)))

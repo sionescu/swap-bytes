@@ -36,7 +36,7 @@
 
 (defparameter *v-16*
   (let ((i 0))
-    (map-into (make-array 100000000 :element-type '(unsigned-byte 16))
+    (map-into (make-array 10000000 :element-type '(unsigned-byte 16))
               (lambda () (mod (incf i) 65536)))))
 
 
