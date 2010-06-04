@@ -1,4 +1,4 @@
-;;; -*- Mode: Lisp -*-
+;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 
 (defpackage :swap-bytes-system
   (:use :common-lisp :asdf))

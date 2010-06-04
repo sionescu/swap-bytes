@@ -1,4 +1,4 @@
-;;; -*- Mode: Lisp -*-
+;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 
 (defpackage :swap-bytes
   (:use #:cl
