@@ -100,28 +100,26 @@ host order(little- or big-endian)."
   #+big-endian    integer)
 
 
-(deftype strict-endianness ()
+(deftype endianness ()
   '(member :big-endian :little-endian))
 
-(deftype endianness ()
-  '(member :network :local :big-endian :little-endian))
+(deftype endianness-designator ()
+  '(member :big-endian :little-endian :network :local))
 
 (defvar *endianness*
   #+big-endian    :big-endian
   #+little-endian :little-endian)
 
-(defun filter-endianness (endianness)
-  (let ((endianness
-         (case endianness
-           (:local   *endianness*)
-           (:network :big-endian)
-           (t        endianness))))
-    (check-type endianness strict-endianness)
-    endianness))
+(defun endianness (endianness)
+  (check-type endianness endianness-designator)
+  (case endianness
+    (:local   *endianness*)
+    (:network :big-endian)
+    (t        endianness)))
 
 (defun find-swap-byte-function (&key size from (to :local))
-  (let ((from (filter-endianness from))
-        (to   (filter-endianness to)))
+  (let ((from (endianness from))
+        (to   (endianness to)))
     (if (eql from to)
         'identity
         (ecase size
