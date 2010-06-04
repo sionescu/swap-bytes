@@ -106,14 +106,14 @@ host order(little- or big-endian)."
 (deftype endianness-designator ()
   '(member :big-endian :little-endian :network :local))
 
-(defvar *endianness*
+(defconstant +endianness+
   #+big-endian    :big-endian
   #+little-endian :little-endian)
 
 (defun endianness (endianness)
   (check-type endianness endianness-designator)
   (case endianness
-    (:local   *endianness*)
+    (:local   +endianness+)
     (:network :big-endian)
     (t        endianness)))
 

@@ -8,4 +8,4 @@
         #:sb-assem)
   (:export #:swap-bytes-16 #:swap-bytes-32 #:swap-bytes-64
            #:htons #:ntohs #:htonl #:ntohl #:htonq #:ntohq
-           #:endianness #:*endianness* #:find-swap-byte-function))
+           #:endianness #:+endianness+ #:find-swap-byte-function))
