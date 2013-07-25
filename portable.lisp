@@ -2,14 +2,14 @@
 
 (in-package :swap-bytes)
 
-(declaim (inline swap-bytes-16))
+(declaim (inline swap-bytes-16 swap-bytes-32 swap-bytes-64))
+
 (defun swap-bytes-16 (integer)
   (declare (type (unsigned-byte 16) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
   (logior (ash (logand #xFF integer)  8)
           (ash integer -8)))
 
-(declaim (inline swap-bytes-32))
 (defun swap-bytes-32 (integer)
   (declare (type (unsigned-byte 32) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
@@ -18,7 +18,6 @@
           (ash (logand #xFF0000 integer)  -8)
           (ash                  integer  -24)))
 
-(declaim (inline swap-bytes-64))
 (defun swap-bytes-64 (integer)
   (declare (type (unsigned-byte 64) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
@@ -35,7 +34,8 @@
      (ash integer -56))))
 
 
-(declaim (inline htons))
+(declaim (inline htons ntohs htonl ntohl htonq ntohq))
+
 (defun htons (integer)
   "Convert (unsigned-byte 16) from host order(little- or big-endian)
 to network order(always big-endian)."
@@ -44,7 +44,6 @@ to network order(always big-endian)."
   #+little-endian (swap-bytes-16 integer)
   #+big-endian    integer)
 
-(declaim (inline ntohs))
 (defun ntohs (integer)
   "Convert (unsigned-byte 16) from network order(always big-endian) to
 host order(little- or big-endian)."
@@ -53,7 +52,6 @@ host order(little- or big-endian)."
   #+little-endian (swap-bytes-16 integer)
   #+big-endian    integer)
 
-(declaim (inline htonl))
 (defun htonl (integer)
   "Convert (unsigned-byte 32) from host order(little- or big-endian)
 to network order(always big-endian)."
@@ -62,7 +60,6 @@ to network order(always big-endian)."
   #+little-endian (swap-bytes-32 integer)
   #+big-endian    integer)
 
-(declaim (inline ntohl))
 (defun ntohl (integer)
   "Convert (unsigned-byte 32) from network order(always big-endian) to
 host order(little- or big-endian)."
@@ -71,7 +68,6 @@ host order(little- or big-endian)."
   #+little-endian (swap-bytes-32 integer)
   #+big-endian    integer)
 
-(declaim (inline htonq))
 (defun htonq (integer)
   "Convert (unsigned-byte 64) from host order(little- or big-endian)
 to network order(always big-endian)."
@@ -80,7 +76,6 @@ to network order(always big-endian)."
   #+little-endian (swap-bytes-64 integer)
   #+big-endian    integer)
 
-(declaim (inline ntohq))
 (defun ntohq (integer)
   "Convert (unsigned-byte 64) from network order(always big-endian) to
 host order(little- or big-endian)."

@@ -2,6 +2,8 @@
 
 (in-package :swap-bytes)
 
+(declaim (inline swap-bytes-16 swap-bytes-32 swap-bytes-64))
+
 #+x86
 (defun swap-bytes-16 (integer)
   (declare (type (unsigned-byte 16) integer))
