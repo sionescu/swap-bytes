@@ -2,18 +2,14 @@
 
 (in-package :swap-bytes)
 
-#-(and sbcl x86)
 (declaim (inline swap-bytes-16))
-#-(and sbcl x86)
 (defun swap-bytes-16 (integer)
   (declare (type (unsigned-byte 16) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
   (logior (ash (logand #xFF integer)  8)
           (ash integer -8)))
 
-#-(and sbcl (or x86 x86-64))
 (declaim (inline swap-bytes-32))
-#-(and sbcl (or x86 x86-64))
 (defun swap-bytes-32 (integer)
   (declare (type (unsigned-byte 32) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
@@ -22,9 +18,7 @@
           (ash (logand #xFF0000 integer)  -8)
           (ash                  integer  -24)))
 
-#-(and sbcl x86-64)
 (declaim (inline swap-bytes-64))
-#-(and sbcl x86-64)
 (defun swap-bytes-64 (integer)
   (declare (type (unsigned-byte 64) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
