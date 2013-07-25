@@ -24,4 +24,4 @@
                (:madeira-port "portable"
                 :when (:not (:or (:and :ccl (:or :x86 :x86-64))
                                  (:and :sbcl (:or :x86 :x86-64))))
-                :depends-on ("package" "ccl" "sbcl"))))
+                :depends-on ("package" #+nil "ccl" "sbcl"))))
