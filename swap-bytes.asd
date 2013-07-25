@@ -1,6 +1,10 @@
 ;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 
 (defsystem :swap-bytes
+  :author "Stas Boukarev <stassats@gmail.com>"
+  :maintainer "Stelian Ionescu <sionescu@cddr.org>"
+  :description "Optimized byte-swapping primitives"
+  :licence "MIT"
   :defsystem-depends-on (:madeira-port :trivial-features)
   :depends-on (:trivial-features)
   :components ((:file "package")
