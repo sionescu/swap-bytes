@@ -28,11 +28,11 @@
                                  (:and :sbcl (:or :x86 :x86-64))))
                 :depends-on ("package" "ccl" "sbcl"))))
 
-(asdf:defsystem :swap-bytes/test
+(defsystem :swap-bytes/test
   :depends-on (:swap-bytes :fiveam)
   :components ((:file "test")))
 
-(defmethod asdf:perform ((o asdf:test-op)
-                         (c (eql (asdf:find-system :swap-bytes))))
-  (asdf:load-system :swap-bytes/test :force '(:swap-bytes/test))
+(defmethod perform ((o test-op)
+                    (c (eql (find-system :swap-bytes))))
+  (load-system :swap-bytes/test :force '(:swap-bytes/test))
   (asdf/package:symbol-call :5am :run! :swap-bytes))
