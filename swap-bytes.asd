@@ -26,7 +26,9 @@
                (:madeira-port "portable"
                 :when (:not (:or (:and :ccl (:or :x86 :x86-64))
                                  (:and :sbcl (:or :x86 :x86-64))))
-                :depends-on ("package" "ccl" "sbcl"))))
+                :depends-on ("package" "ccl" "sbcl"))
+               (:file "network" :depends-on ("package" "portable"))
+               (:file "endianness" :depends-on ("package" "portable"))))
 
 (defsystem :swap-bytes/test
   :depends-on (:swap-bytes :fiveam)
