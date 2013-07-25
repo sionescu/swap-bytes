@@ -8,6 +8,7 @@
   :defsystem-depends-on (:madeira-port :trivial-features)
   :depends-on (:trivial-features)
   :components ((:file "package")
+               #+nil
                (:madeira-port "ccl"
                 :when (:and :ccl (:or :x86 :x86-64))
                 :depends-on ("package"))
