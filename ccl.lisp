@@ -27,23 +27,20 @@
   (single-value-return))
 
 #+x8632-target
-(defx8632lapfunction swap-bytes::%swap-bytes-64 ((number arg_z))
-  ; Extract the u64 from the number (either a fixnum or, most certainly,
-  ; a bignum) in the MM0 register, swap the bytes in the two doublewords,
-  ; move them again to the MM0 register, make and return a bignum.
-  (save-simple-frame)
-  (call-subprim .SPgetu64)
-  (movd (% mm0) (% imm0))  ; imm0 = low part
-  (psrlq ($ 32) (% mm0))   ; shift high doubleword to low
-  (movd (% mm0) (% temp0)) ; temp0 = high part
-  (bswapl (% imm0))        ; swap low part bytes
-  (movd (% imm0) (% mm0))  ; mm0 = low part
-  (bswapl (% temp0))       ; swap high part bytes
-  (movd (% temp0) (% mm1)) ; mm1 = high part
-  (psllq ($ 32) (% mm0))   ; shift low doubleword to high
-  (paddq (% mm1) (% mm0))  ; add both parts into mm0
-  (restore-simple-frame)
-  (jmp-subprim .SPmakeu64))
+(defun swap-bytes-64 (integer)
+  (declare (type (unsigned-byte 64) integer)
+           (optimize (speed 3) (safety 0) (debug 0)))
+  (macrolet ((shift (mask shift)
+               `(ash (logand ,mask integer) ,shift)))
+    (logior
+     (shift #x000000000000FF  56)
+     (shift #x0000000000FF00  40)
+     (shift #x00000000FF0000  24)
+     (shift #x000000FF000000   8)
+     (shift #x0000FF00000000  -8)
+     (shift #x00FF0000000000 -24)
+     (shift #xFF000000000000 -40)
+     (ash integer -56))))
 
 #+x8664-target
 (defx86lapfunction swap-bytes::%swap-bytes-64 ((number arg_z))
