@@ -1,26 +1,27 @@
 ;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 
-;;; This software is in the public domain and is
-;;; provided with absolutely no warranty.
+(defpackage #:swap-bytes-test
+  (:use #:cl #:fiveam #:swap-bytes)
+  (:export #:run-tests))
 
-(setf *print-array* nil)
+(in-package #:swap-bytes-test)
 
-(declaim (inline swap-bytes-16-portable))
-(defun swap-bytes-16-portable (integer)
+(def-suite :swap-bytes)
+(in-suite :swap-bytes)
+
+(defun sb16p (integer)
   (declare (type (unsigned-byte 16) integer))
   (logior (ash (logand #xFF integer) 8)
           (ash integer -8)))
 
-(declaim (inline swap-bytes-32-portable))
-(defun swap-bytes-32-portable (integer)
+(defun sb32p (integer)
   (declare (type (unsigned-byte 32) integer))
   (logior (ash (logand #xFF integer) 24)
           (ash (logand #xFF00 integer) 8)
           (ash (logand #xFF0000 integer) -8)
           (ash integer -24)))
 
-(declaim (inline swap-bytes-64-portable))
-(defun swap-bytes-64-portable (integer)
+(defun sb64p (integer)
   (declare (type (unsigned-byte 64) integer))
   (macrolet ((shift (mask shift)
                `(ash (logand ,mask integer) ,shift)))
@@ -34,69 +35,53 @@
      (shift #xFF000000000000 -40)
      (ash integer -56))))
 
-(defparameter *v-16*
-  (let ((i 0))
-    (map-into (make-array 10000000 :element-type '(unsigned-byte 16))
-              (lambda () (mod (incf i) 65536)))))
+(defparameter *test-table*
+  '((#xcafe #xfeca swap-bytes-16 sb16p)
+    (#xf457 #x57f4 swap-bytes-16 sb16p)
+    (#x0000 #x0000 swap-bytes-16 sb16p)
+    (#xffff #xffff swap-bytes-16 sb16p)
+    (#xcafedead #xaddefeca swap-bytes-32 sb32p)
+    (#xb116b00b #x0bb016b1 swap-bytes-32 sb32p)
+    (#xbe47dead #xadde47be swap-bytes-32 sb32p)
+    (#xdeadbeef #xefbeadde swap-bytes-32 sb32p)
+    (#x00000000 #x00000000 swap-bytes-32 sb32p)
+    (#xffffffff #xffffffff swap-bytes-32 sb32p)
+    (#xb116b00b1ee7babe #xbebae71e0bb016b1 swap-bytes-64 sb64p)
+    (#xdeadbeefcafebabe #xbebafecaefbeadde swap-bytes-64 sb64p)
+    (#x0000000000000000 #x0000000000000000 swap-bytes-64 sb64p)
+    (#xffffffffffffffff #xffffffffffffffff swap-bytes-64 sb64p)))
 
+(test identity/funcall
+  "Swapping a number twice gives the identity"
+  (loop for (num nil fun) in *test-table*
+     do (is (= (funcall fun (funcall fun num)) num))))
 
-(defun test-16 (vector)
-  (declare (type (simple-array (unsigned-byte 16) (*))
-                 vector))
-  (loop for i below (length vector)
-        do (setf (aref vector i)
-                 (swap-bytes:swap-bytes-16
-                  (aref vector i)))))
+(test identity/compiled
+  "Swapping a number twice gives the identity"
+  (loop for (num nil fun) in *test-table*
+     do (is (= (funcall fun (funcall fun num)) num))))
 
-(defun test-16-p (vector)
-  (declare (type (simple-array (unsigned-byte 16) (*))
-                 vector))
-  (loop for i below (length vector)
-        do (setf (aref vector i)
-                 (swap-bytes-16-portable
-                  (aref vector i)))))
+(test result/funcall
+  "Simple values"
+  (loop for (num snum fun) in *test-table*
+     do (is (= (funcall fun num) snum))))
 
-;;;
+(test result/compiled
+  "Simple values"
+  (loop for (num snum fun) in *test-table*
+     do (is (= (funcall (compile nil `(lambda (n) (,fun n)))
+                        num)
+               snum))))
 
-(defparameter *v-32*
-  (let ((i 0))
-    (map-into (make-array 10000000 :element-type '(unsigned-byte 32))
-              (lambda () (incf i)))))
+(test portable/funcall
+  "Simple values"
+  (loop for (num nil fun pfun) in *test-table*
+     do (is (= (funcall fun num)
+               (funcall pfun num)))))
 
-(defun test-32 (vector)
-  (declare (type (simple-array (unsigned-byte 32) (*))
-                 vector))
-  (loop for i below (length vector)
-        do (setf (aref vector i)
-                 (swap-bytes:swap-bytes-32
-                  (aref vector i)))))
-
-(defun test-32-p (vector)
-  (declare (type (simple-array (unsigned-byte 32) (*))
-                 vector))
-  (loop for i below (length vector)
-        do (setf (aref vector i)
-                 (swap-bytes-32-portable
-                  (aref vector i)))))
-#+x86-64
-(progn
-  (defparameter *v-64*
-    (let ((i 0))
-      (map-into (make-array 10000000 :element-type '(unsigned-byte 64))
-                (lambda () (incf i)))))
-
- (defun test-64 (vector)
-   (declare (type (simple-array (unsigned-byte 64) (*))
-                  vector))
-   (loop for i below (length vector)
-         do (setf (aref vector i)
-                  (swap-bytes:swap-bytes-64
-                   (aref vector i)))))
-
- (defun test-64-p (vector)
-   (declare (type (simple-array (unsigned-byte 64) (*))
-                  vector))
-   (loop for i below (length vector)
-         do (setf (aref vector i)
-                  (swap-bytes-64-portable
-                   (aref vector i))))))
+(test portable/compiled
+  "Simple values"
+  (loop for (num nil fun pfun) in *test-table*
+     do (is (= (funcall (compile nil `(lambda (n) (,fun n)))
+                        num)
+               (funcall pfun num)))))
