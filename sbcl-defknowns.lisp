@@ -1,8 +1,5 @@
 ;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 
-;;; This software is in the public domain and is
-;;; provided with absolutely no warranty.
-
 (in-package #:swap-bytes)
 
 #+x86
