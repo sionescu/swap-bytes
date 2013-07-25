@@ -14,7 +14,6 @@
 #-(and sbcl (or x86 x86-64))
 (declaim (inline swap-bytes-32))
 #-(and sbcl (or x86 x86-64))
-
 (defun swap-bytes-32 (integer)
   (declare (type (unsigned-byte 32) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
