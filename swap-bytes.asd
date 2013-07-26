@@ -1,7 +1,7 @@
 ;;; -*- Mode: Lisp; indent-tabs-mode: nil -*-
 
-(unless (or #+asdf3 (asdf/driver:version<= "2.29" (asdf-version)))
-  (error "You need ASDF >= 2.29 to load this system correctly."))
+(unless (or #+asdf3 (asdf/driver:version<= "2.32" (asdf-version)))
+  (error "You need ASDF >= 2.32 to load this system correctly."))
 
 (defsystem :swap-bytes
   :author "Stas Boukarev <stassats@gmail.com>"
@@ -34,7 +34,6 @@
   :depends-on (:swap-bytes :fiveam)
   :components ((:file "test")))
 
-(defmethod perform ((o test-op)
-                    (c (eql (find-system :swap-bytes))))
+(defmethod perform ((o test-op) (c (eql (find-system :swap-bytes))))
   (load-system :swap-bytes/test :force '(:swap-bytes/test))
-  (asdf/package:symbol-call :5am :run! :swap-bytes))
+  (uiop:symbol-call :5am :run! :swap-bytes))
