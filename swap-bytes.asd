@@ -7,6 +7,7 @@
   :author "Stas Boukarev <stassats@gmail.com>"
   :maintainer "Stelian Ionescu <sionescu@cddr.org>"
   :description "Optimized byte-swapping primitives"
+  :version (:read-file-form "version.sexp")
   :licence "MIT"
   :defsystem-depends-on (:trivial-features)
   :depends-on (:trivial-features)
