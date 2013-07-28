@@ -27,20 +27,12 @@
   (single-value-return))
 
 #+x8632-target
-(defun swap-bytes-64 (integer)
+(defun swap-bytes::%swap-bytes-64 (integer)
   (declare (type (unsigned-byte 64) integer)
            (optimize (speed 3) (safety 0) (debug 0)))
-  (macrolet ((shift (mask shift)
-               `(ash (logand ,mask integer) ,shift)))
-    (logior
-     (shift #x000000000000FF  56)
-     (shift #x0000000000FF00  40)
-     (shift #x00000000FF0000  24)
-     (shift #x000000FF000000   8)
-     (shift #x0000FF00000000  -8)
-     (shift #x00FF0000000000 -24)
-     (shift #xFF000000000000 -40)
-     (ash integer -56))))
+  (logior
+   (swap-bytes:swap-bytes-32 (ldb (byte 32 32) integer))
+   (ash (swap-bytes:swap-bytes-32 (ldb (byte 32 0) integer)) 32)))
 
 #+x8664-target
 (defx86lapfunction swap-bytes::%swap-bytes-64 ((number arg_z))
