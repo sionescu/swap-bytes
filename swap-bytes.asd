@@ -32,6 +32,10 @@
                (:file "endianness" :depends-on ("package" "portable"))))
 
 (defsystem :swap-bytes/test
+  :author "Stas Boukarev <stassats@gmail.com>"
+  :maintainer "Stelian Ionescu <sionescu@cddr.org>"
+  :description "Optimized byte-swapping primitives"
+  :version (:read-file-form "version.sexp")
   :depends-on (:swap-bytes :fiveam)
   :components ((:file "test")))
 
