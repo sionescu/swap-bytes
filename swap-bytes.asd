@@ -40,5 +40,5 @@
   :components ((:file "test")))
 
 (defmethod perform ((o test-op) (c (eql (find-system :swap-bytes))))
-  (load-system :swap-bytes/test :force '(:swap-bytes/test))
+  (load-system :swap-bytes/test)
   (symbol-call :5am :run! :swap-bytes))
