@@ -31,6 +31,9 @@
   (:result-types sb-vm::unsigned-num)
   (:generator 2
     (move res integer)
+    #+#1=#.(cl:if (cl:ignore-errors (sb-ext:assert-version->= 1 5 9) t) '(and) '(or))
+    (inst rol :word res 8)
+    #-#1#
     (inst rol (sb-vm::reg-in-size res :word) 8)))
 
 #+x86
@@ -57,6 +60,9 @@
   (:result-types sb-vm::unsigned-num)
   (:generator 2
     (move res integer)
+    #+#1=#.(cl:if (cl:ignore-errors (sb-ext:assert-version->= 1 5 9) t) '(and) '(or))
+    (inst bswap :dword res)
+    #-#1#
     (inst bswap (sb-vm::reg-in-size res :dword))))
 
 #+x86-64
