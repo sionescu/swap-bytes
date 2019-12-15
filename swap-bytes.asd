@@ -29,7 +29,8 @@
                                        (:and :sbcl (:or :x86 :x86-64))))
                 :depends-on ("package" "ccl" "sbcl"))
                (:file "network" :depends-on ("package" "portable"))
-               (:file "endianness" :depends-on ("package" "portable"))))
+               (:file "endianness" :depends-on ("package" "portable")))
+  :in-order-to ((test-op (test-op :swap-bytes/test))))
 
 (defsystem :swap-bytes/test
   :author "Stas Boukarev <stassats@gmail.com>"
@@ -37,8 +38,5 @@
   :description "Swap-bytes test suite."
   :version (:read-file-form "version.sexp")
   :depends-on (:swap-bytes :fiveam)
-  :components ((:file "test")))
-
-(defmethod perform ((o test-op) (c (eql (find-system :swap-bytes))))
-  (load-system :swap-bytes/test)
-  (symbol-call :5am :run! :swap-bytes))
+  :components ((:file "test"))
+  :perform (test-op (o c) (symbol-call :5am :run! :swap-bytes)))
