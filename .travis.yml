@@ -32,7 +32,7 @@ notifications:
     skip_join: true
 
 install:
-  - curl -L https://raw.githubusercontent.com/sionescu/cl-travis/master/install.sh | sh
+  - curl -L https://raw.githubusercontent.com/lispci/cl-travis/master/install.sh | sh
   - cl -e "(cl:in-package :cl-user)
            (dolist (p '(:trivial-features :fiveam))
              (ql:quickload p :verbose t))"
