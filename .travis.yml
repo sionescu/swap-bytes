@@ -9,9 +9,9 @@ env:
     - LISP=ecl
     - LISP=abcl
     - LISP=clisp
-    - LISP=allegro
-    - LISP=ccl32
-    - LISP=sbcl32
+    # - LISP=allegro
+    # - LISP=ccl32
+    # - LISP=sbcl32
     # - LISP=cmucl
 
 jobs:
