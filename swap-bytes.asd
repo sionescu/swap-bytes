@@ -10,7 +10,7 @@
   :version (:read-file-form "version.sexp")
   :licence "MIT"
   :defsystem-depends-on (:trivial-features)
-  :depends-on (:trivial-features)
+  :depends-on (:trivial-features :ieee-floats)
   :components ((:file "package")
                (:file "ccl"
                 :if-feature (:and :ccl (:or :x86 :x86-64))
